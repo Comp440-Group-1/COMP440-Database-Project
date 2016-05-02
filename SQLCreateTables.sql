@@ -1,0 +1,295 @@
+USE [master]
+GO
+
+/****** Object:  Database [s16guest17]    Script Date: 5/2/2016 2:35:10 AM ******/
+
+CREATE DATABASE [s16guest17]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N's16guest17', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.CSDB440\MSSQL\DATA\s16guest17.mdf' , SIZE = 3136KB , MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB )
+ LOG ON 
+( NAME = N's16guest17_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.CSDB440\MSSQL\DATA\s16guest17_log.ldf' , SIZE = 784KB , MAXSIZE = 2048GB , FILEGROWTH = 10%)
+GO
+
+ALTER DATABASE [s16guest17] SET COMPATIBILITY_LEVEL = 110
+GO
+
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [s16guest17].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+
+ALTER DATABASE [s16guest17] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET AUTO_CREATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [s16guest17] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [s16guest17] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [s16guest17] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET  ENABLE_BROKER 
+GO
+
+ALTER DATABASE [s16guest17] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [s16guest17] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET RECOVERY FULL 
+GO
+
+ALTER DATABASE [s16guest17] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [s16guest17] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [s16guest17] SET DB_CHAINING OFF 
+GO
+
+ALTER DATABASE [s16guest17] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+
+ALTER DATABASE [s16guest17] SET TARGET_RECOVERY_TIME = 0 SECONDS 
+GO
+
+ALTER DATABASE [s16guest17] SET  READ_WRITE 
+GO
+
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Products]    Script Date: 5/2/2016 2:36:20 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Products](
+	[Product_ID] [int] NOT NULL,
+	[Product_Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
+(
+	[Product_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Employee]    Script Date: 5/2/2016 2:37:27 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Employee](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](50) NULL,
+	[LastName] [nvarchar](50) NULL,
+	[Address1] [nvarchar](50) NULL,
+	[Address2] [nvarchar](50) NULL,
+	[City] [nvarchar](50) NULL,
+	[Zip] [nvarchar](5) NULL,
+	[State] [nchar](2) NULL,
+	[Salary] [bigint] NULL,
+	[Age] [int] NULL,
+	[Department] [int] NULL,
+ CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Salary]  DEFAULT ((0)) FOR [Salary]
+GO
+
+ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Age]  DEFAULT ((18)) FOR [Age]
+GO
+
+ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Department]  DEFAULT ((1)) FOR [Department]
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Login]    Script Date: 5/2/2016 2:37:50 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Login](
+	[Customer_Employee_ID] [int] NOT NULL,
+	[Employee_Login] [varchar](20) NOT NULL,
+	[Employee_Password] [varchar](20) NOT NULL,
+ CONSTRAINT [PK_Login] PRIMARY KEY CLUSTERED 
+(
+	[Customer_Employee_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Login] ADD  CONSTRAINT [DF_Login_Customer_Employee_ID]  DEFAULT ((1)) FOR [Customer_Employee_ID]
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Dev_Release]    Script Date: 5/2/2016 2:38:22 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Dev_Release](
+	[Product_ID] [int] NOT NULL,
+	[Product_Version] [float] NOT NULL,
+	[Product_Release_Date] [date] NOT NULL,
+ CONSTRAINT [PK_Dev_Release] PRIMARY KEY CLUSTERED 
+(
+	[Product_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Customer]    Script Date: 5/2/2016 2:38:41 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Customer](
+	[Customer_ID] [int] NOT NULL,
+	[Customer_Name] [varchar](50) NOT NULL,
+	[Customer_Email] [varchar](50) NULL,
+	[Customer_Phone] [int] NULL,
+	[Customer_Address] [varchar](50) NULL,
+	[Customer_City] [varchar](20) NULL,
+	[Customer_State] [varchar](2) NULL,
+	[Customer_Zip] [int] NULL,
+ CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
+(
+	[Customer_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_Customer] FOREIGN KEY([Customer_ID])
+REFERENCES [dbo].[Customer] ([Customer_ID])
+GO
+
+ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [FK_Customer_Customer]
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Cust_Release]    Script Date: 5/2/2016 2:39:25 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Cust_Release](
+	[Product_ID] [int] NOT NULL,
+	[Product_Version] [float] NOT NULL,
+	[Product_Release_Date] [date] NOT NULL,
+ CONSTRAINT [PK_Cust_Realease] PRIMARY KEY CLUSTERED 
+(
+	[Product_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
