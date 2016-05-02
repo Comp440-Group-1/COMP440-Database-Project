@@ -141,6 +141,30 @@ GO
 USE [s16guest17]
 GO
 
+
+/****** Object:  Table [dbo].[Company]    Script Date: 5/2/2016 2:53:10 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Company](
+	[Company_ID] [int] NOT NULL,
+	[Company_Name] [varchar](50) NOT NULL,
+	[Company_Address] [varchar](50) NULL,
+	[Company_Phone] [varchar](10) NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
 /****** Object:  Table [dbo].[Employee]    Script Date: 5/2/2016 2:37:27 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -180,7 +204,7 @@ GO
 USE [s16guest17]
 GO
 
-/****** Object:  Table [dbo].[Login]    Script Date: 5/2/2016 2:37:50 AM ******/
+/****** Object:  Table [dbo].[Login_]    Script Date: 5/2/2016 2:37:50 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -190,11 +214,11 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[Login](
+CREATE TABLE [dbo].[Login_](
 	[Customer_Employee_ID] [int] NOT NULL,
 	[Employee_Login] [varchar](20) NOT NULL,
 	[Employee_Password] [varchar](20) NOT NULL,
- CONSTRAINT [PK_Login] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Login_] PRIMARY KEY CLUSTERED 
 (
 	[Customer_Employee_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -205,7 +229,7 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-ALTER TABLE [dbo].[Login] ADD  CONSTRAINT [DF_Login_Customer_Employee_ID]  DEFAULT ((1)) FOR [Customer_Employee_ID]
+ALTER TABLE [dbo].[Login_] ADD  CONSTRAINT [DF_Login_Customer_Employee_ID]  DEFAULT ((1)) FOR [Customer_Employee_ID]
 GO
 
 USE [s16guest17]
