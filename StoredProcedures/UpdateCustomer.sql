@@ -19,7 +19,7 @@ GO
 -- Description:	<UpdateCustomer>
 -- =============================================
 CREATE PROCEDURE UpdateCustomer
-@flag bit output,-- return 0 for fail,1 for success
+
 @Customer_ID int,
 @Customer_Name vachar(50),
 @Customer_Email vachar(50),
@@ -30,22 +30,17 @@ CREATE PROCEDURE UpdateCustomer
 @Customer_Zip int
 
 AS BEGIN
-BEGIN TRANSACTION 
-BEGIN TRY
- Update Customer set Customer_Name=@Customer_Name, Customer_Email=@Customer_Email, 
- Customer_Phone=@Customer_Phone, Customer_Address=@Customer_Address, Customer_City=@Customer_City,
- Customer_State=@Customer_State, Customer_Zip=@Customer_Zip
-Where Customer_ID = @Customer_ID 
- set @flag=1; 
-IF @@TRANCOUNT > 0
- BEGIN commit TRANSACTION;
- END
-END TRY
-BEGIN CATCH
-IF @@TRANCOUNT > 0
- BEGIN rollback TRANSACTION; 
- END
- set @flag=0;
- END CATCH
- END 
+      SET NOCOUNT ON 
 
+      UPDATE dbo.Customer
+      SET 
+			 Customer_Name=@Customer_Name, Customer_Email=@Customer_Email, 
+			 Customer_Phone=@Customer_Phone, Customer_Address=@Customer_Address, 
+			 Customer_City=@Customer_City, Customer_State=@Customer_State, 
+			 Customer_Zip=@Customer_Zip
+      FROM   dbo.Customer
+      WHERE  
+      Customer_ID = @Customer_ID                   
+
+END
+GO
