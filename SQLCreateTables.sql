@@ -111,10 +111,10 @@ ALTER DATABASE [s16guest17] SET  READ_WRITE
 GO
 
 
-USE [s16guest17]
+ USE [s16guest17]
 GO
 
-/****** Object:  Table [dbo].[Products]    Script Date: 5/2/2016 2:36:20 AM ******/
+/****** Object:  Table [dbo].[Branch]    Script Date: 5/6/2016 5:47:31 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -124,12 +124,14 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[Products](
-	[Product_ID] [int] NOT NULL,
-	[Product_Name] [varchar](50) NOT NULL,
- CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
+CREATE TABLE [dbo].[Branch](
+	[Branch_ID] [int] NOT NULL,
+	[Branch_Name] [varchar](50) NOT NULL,
+	[Cust_Release_ID] [int] NULL,
+	[Dev_Release_ID] [int] NULL,
+ CONSTRAINT [PK_Branch] PRIMARY KEY CLUSTERED 
 (
-	[Product_ID] ASC
+	[Branch_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -138,11 +140,24 @@ GO
 SET ANSI_PADDING OFF
 GO
 
+ALTER TABLE [dbo].[Branch]  WITH CHECK ADD  CONSTRAINT [FK_Branch_Cust_Release] FOREIGN KEY([Cust_Release_ID])
+REFERENCES [dbo].[Cust_Release] ([Cust_Release_ID])
+GO
+
+ALTER TABLE [dbo].[Branch] CHECK CONSTRAINT [FK_Branch_Cust_Release]
+GO
+
+ALTER TABLE [dbo].[Branch]  WITH CHECK ADD  CONSTRAINT [FK_Branch_Dev_Release] FOREIGN KEY([Dev_Release_ID])
+REFERENCES [dbo].[Dev_Release] ([Dev_Release_ID])
+GO
+
+ALTER TABLE [dbo].[Branch] CHECK CONSTRAINT [FK_Branch_Dev_Release]
+GO
+
 USE [s16guest17]
 GO
 
-
-/****** Object:  Table [dbo].[Company]    Script Date: 5/2/2016 2:53:10 AM ******/
+/****** Object:  Table [dbo].[Company]    Script Date: 5/6/2016 5:47:41 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -156,7 +171,9 @@ CREATE TABLE [dbo].[Company](
 	[Company_ID] [int] NOT NULL,
 	[Company_Name] [varchar](50) NOT NULL,
 	[Company_Address] [varchar](50) NULL,
-	[Company_Phone] [varchar](10) NULL
+	[Product_ID] [int] NULL,
+	[Company_Phone] [varchar](10) NULL,
+	[Company_Employee_ID] [int] NULL
 ) ON [PRIMARY]
 
 GO
@@ -164,47 +181,24 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-
-/****** Object:  Table [dbo].[Employee]    Script Date: 5/2/2016 2:37:27 AM ******/
-SET ANSI_NULLS ON
+ALTER TABLE [dbo].[Company]  WITH CHECK ADD  CONSTRAINT [FK_Company_Company_Employee] FOREIGN KEY([Company_Employee_ID])
+REFERENCES [dbo].[Company_Employee] ([Company_Employee_ID])
 GO
 
-SET QUOTED_IDENTIFIER ON
+ALTER TABLE [dbo].[Company] CHECK CONSTRAINT [FK_Company_Company_Employee]
 GO
 
-CREATE TABLE [dbo].[Employee](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[FirstName] [nvarchar](50) NULL,
-	[LastName] [nvarchar](50) NULL,
-	[Address1] [nvarchar](50) NULL,
-	[Address2] [nvarchar](50) NULL,
-	[City] [nvarchar](50) NULL,
-	[Zip] [nvarchar](5) NULL,
-	[State] [nchar](2) NULL,
-	[Salary] [bigint] NULL,
-	[Age] [int] NULL,
-	[Department] [int] NULL,
- CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
+ALTER TABLE [dbo].[Company]  WITH CHECK ADD  CONSTRAINT [FK_Company_Products] FOREIGN KEY([Product_ID])
+REFERENCES [dbo].[Products] ([Product_ID])
 GO
 
-ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Salary]  DEFAULT ((0)) FOR [Salary]
-GO
-
-ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Age]  DEFAULT ((18)) FOR [Age]
-GO
-
-ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Department]  DEFAULT ((1)) FOR [Department]
+ALTER TABLE [dbo].[Company] CHECK CONSTRAINT [FK_Company_Products]
 GO
 
 USE [s16guest17]
 GO
 
-/****** Object:  Table [dbo].[Login_]    Script Date: 5/2/2016 2:37:50 AM ******/
+/****** Object:  Table [dbo].[Company_Employee]    Script Date: 5/6/2016 5:47:54 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -214,13 +208,21 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[Login_](
-	[Customer_Employee_ID] [int] NOT NULL,
-	[Employee_Login] [varchar](20) NOT NULL,
-	[Employee_Password] [varchar](20) NOT NULL,
- CONSTRAINT [PK_Login_] PRIMARY KEY CLUSTERED 
+CREATE TABLE [dbo].[Company_Employee](
+	[Company_Employee_ID] [int] NOT NULL,
+	[FirstName] [varchar](50) NULL,
+	[LastName] [varchar](50) NULL,
+	[Address1] [varchar](50) NULL,
+	[Address2] [varchar](50) NULL,
+	[City] [varchar](50) NULL,
+	[Zip] [varchar](50) NULL,
+	[State] [varchar](50) NULL,
+	[Salary] [varchar](50) NULL,
+	[Age] [varchar](50) NULL,
+	[Department_ID] [int] NULL,
+ CONSTRAINT [PK_Company_Employee] PRIMARY KEY CLUSTERED 
 (
-	[Customer_Employee_ID] ASC
+	[Company_Employee_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
@@ -229,36 +231,41 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-ALTER TABLE [dbo].[Login_] ADD  CONSTRAINT [DF_Login_Customer_Employee_ID]  DEFAULT ((1)) FOR [Customer_Employee_ID]
-GO
 
 USE [s16guest17]
 GO
 
-/****** Object:  Table [dbo].[Dev_Release]    Script Date: 5/2/2016 2:38:22 AM ******/
+/****** Object:  Table [dbo].[Cust_Release]    Script Date: 5/6/2016 5:48:07 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[Dev_Release](
-	[Product_ID] [int] NOT NULL,
+CREATE TABLE [dbo].[Cust_Release](
+	[Cust_Release_ID] [int] NOT NULL,
 	[Product_Version] [float] NOT NULL,
 	[Product_Release_Date] [date] NOT NULL,
- CONSTRAINT [PK_Dev_Release] PRIMARY KEY CLUSTERED 
+	[Download_ID] [int] NULL,
+ CONSTRAINT [PK_Cust_Realease] PRIMARY KEY CLUSTERED 
 (
-	[Product_ID] ASC
+	[Cust_Release_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
 
+ALTER TABLE [dbo].[Cust_Release]  WITH CHECK ADD  CONSTRAINT [FK_Cust_Release_Download_Log] FOREIGN KEY([Download_ID])
+REFERENCES [dbo].[Download_Log] ([Download_ID])
+GO
+
+ALTER TABLE [dbo].[Cust_Release] CHECK CONSTRAINT [FK_Cust_Release_Download_Log]
+GO
 
 USE [s16guest17]
 GO
 
-/****** Object:  Table [dbo].[Customer]    Script Date: 5/2/2016 2:38:41 AM ******/
+/****** Object:  Table [dbo].[Customer]    Script Date: 5/6/2016 5:48:15 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -272,11 +279,12 @@ CREATE TABLE [dbo].[Customer](
 	[Customer_ID] [int] NOT NULL,
 	[Customer_Name] [varchar](50) NOT NULL,
 	[Customer_Email] [varchar](50) NULL,
-	[Customer_Phone] [int] NULL,
 	[Customer_Address] [varchar](50) NULL,
 	[Customer_City] [varchar](20) NULL,
 	[Customer_State] [varchar](2) NULL,
 	[Customer_Zip] [int] NULL,
+	[Employee_ID] [int] NULL,
+	[Phone_ID] [int] NULL,
  CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
 (
 	[Customer_ID] ASC
@@ -288,32 +296,217 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_Customer] FOREIGN KEY([Customer_ID])
-REFERENCES [dbo].[Customer] ([Customer_ID])
+ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_Employee] FOREIGN KEY([Employee_ID])
+REFERENCES [dbo].[Employee] ([Employee_Id])
 GO
 
-ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [FK_Customer_Customer]
+ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [FK_Customer_Employee]
+GO
+
+ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [FK_Customer_Phone] FOREIGN KEY([Phone_ID])
+REFERENCES [dbo].[Phone] ([Phone_Id])
+GO
+
+ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [FK_Customer_Phone]
 GO
 
 USE [s16guest17]
 GO
 
-/****** Object:  Table [dbo].[Cust_Release]    Script Date: 5/2/2016 2:39:25 AM ******/
+/****** Object:  Table [dbo].[Dev_Release]    Script Date: 5/6/2016 5:48:31 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[Cust_Release](
-	[Product_ID] [int] NOT NULL,
+CREATE TABLE [dbo].[Dev_Release](
+	[Dev_Release_ID] [int] NOT NULL,
 	[Product_Version] [float] NOT NULL,
 	[Product_Release_Date] [date] NOT NULL,
- CONSTRAINT [PK_Cust_Realease] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_Dev_Release] PRIMARY KEY CLUSTERED 
+(
+	[Dev_Release_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Download_Log]    Script Date: 5/6/2016 5:48:42 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Download_Log](
+	[Download_ID] [int] NOT NULL,
+	[Download_Name] [varchar](50) NULL,
+	[Download_Company] [varchar](50) NULL,
+	[Download_Customer] [varchar](50) NULL,
+	[Download_DateTime] [datetime] NULL,
+ CONSTRAINT [PK_Download] PRIMARY KEY CLUSTERED 
+(
+	[Download_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Employee]    Script Date: 5/6/2016 5:48:52 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Employee](
+	[Employee_Id] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](50) NULL,
+	[LastName] [nvarchar](50) NULL,
+	[Address1] [nvarchar](50) NULL,
+	[Address2] [nvarchar](50) NULL,
+	[City] [nvarchar](50) NULL,
+	[Zip] [nvarchar](5) NULL,
+	[State] [nchar](2) NULL,
+	[Salary] [bigint] NULL,
+	[Age] [int] NULL,
+	[Department_ID] [int] NULL,
+ CONSTRAINT [PK_Employee] PRIMARY KEY CLUSTERED 
+(
+	[Employee_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Salary]  DEFAULT ((0)) FOR [Salary]
+GO
+
+ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Age]  DEFAULT ((18)) FOR [Age]
+GO
+
+ALTER TABLE [dbo].[Employee] ADD  CONSTRAINT [DF_Employee_Department]  DEFAULT ((1)) FOR [Department_ID]
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Login_]    Script Date: 5/6/2016 5:49:02 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Login_](
+	[Login_ID] [int] NOT NULL,
+	[Employee_Login] [varchar](20) NOT NULL,
+	[Employee_ID] [int] NULL,
+	[Employee_Password] [varchar](20) NOT NULL,
+	[Cust_Release_ID] [int] NULL,
+ CONSTRAINT [PK_Login] PRIMARY KEY CLUSTERED 
+(
+	[Login_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Login_] ADD  CONSTRAINT [DF_Login_Customer_Employee_ID]  DEFAULT ((1)) FOR [Login_ID]
+GO
+
+ALTER TABLE [dbo].[Login_]  WITH CHECK ADD  CONSTRAINT [FK_Login__Cust_Release] FOREIGN KEY([Cust_Release_ID])
+REFERENCES [dbo].[Cust_Release] ([Cust_Release_ID])
+GO
+
+ALTER TABLE [dbo].[Login_] CHECK CONSTRAINT [FK_Login__Cust_Release]
+GO
+
+ALTER TABLE [dbo].[Login_]  WITH CHECK ADD  CONSTRAINT [FK_Login__Employee] FOREIGN KEY([Employee_ID])
+REFERENCES [dbo].[Employee] ([Employee_Id])
+GO
+
+ALTER TABLE [dbo].[Login_] CHECK CONSTRAINT [FK_Login__Employee]
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Phone]    Script Date: 5/6/2016 5:49:11 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Phone](
+	[Phone_Id] [int] NOT NULL,
+	[Phone] [varchar](11) NULL,
+ CONSTRAINT [PK_Phone] PRIMARY KEY CLUSTERED 
+(
+	[Phone_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+USE [s16guest17]
+GO
+
+/****** Object:  Table [dbo].[Products]    Script Date: 5/6/2016 5:49:22 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[Products](
+	[Product_ID] [int] NOT NULL,
+	[Product_Name] [varchar](50) NOT NULL,
+	[Branch_ID] [int] NULL,
+ CONSTRAINT [PK_Products] PRIMARY KEY CLUSTERED 
 (
 	[Product_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[Products]  WITH CHECK ADD  CONSTRAINT [FK_Products_Branch] FOREIGN KEY([Branch_ID])
+REFERENCES [dbo].[Branch] ([Branch_ID])
+GO
+
+ALTER TABLE [dbo].[Products] CHECK CONSTRAINT [FK_Products_Branch]
 GO
 

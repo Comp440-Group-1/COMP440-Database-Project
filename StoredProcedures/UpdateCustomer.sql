@@ -29,9 +29,11 @@ CREATE PROCEDURE UpdateCustomer
 @Customer_State vachar(2),
 @Customer_Zip int
 
-AS BEGIN
-      SET NOCOUNT ON 
+AS 
+BEGIN
+      SET NOCOUNT ON;
 
+	  BEGIN TRY
       UPDATE dbo.Customer
       SET 
 			 Customer_Name=@Customer_Name, Customer_Email=@Customer_Email, 
@@ -41,6 +43,11 @@ AS BEGIN
       FROM   dbo.Customer
       WHERE  
       Customer_ID = @Customer_ID                   
+	  END TRY 
+
+	BEGIN CATCH 
+     PRINT 'Error updating customer table' 
+	END CATCH 
 
 END
 GO
